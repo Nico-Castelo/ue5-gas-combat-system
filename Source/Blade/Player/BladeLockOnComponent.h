@@ -24,6 +24,9 @@ public:
 protected:
 
 	void FindBestTarget();
+	
+	UPROPERTY(EditDefaultsOnly, Category= "Lock")
+	float PitchOffset = -15.0f;
 
 	UPROPERTY(Transient)
 	TObjectPtr<AActor> CurrentTarget = nullptr;

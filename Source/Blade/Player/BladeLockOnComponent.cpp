@@ -58,7 +58,10 @@ void UBladeLockOnComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		
 	FVector Direction = (CurrentTarget->GetActorLocation() - GetOwner()->GetActorLocation());
 	
-	Controller->SetControlRotation(Direction.Rotation());
+	FRotator LookRotation = Direction.Rotation();
+	LookRotation.Pitch += PitchOffset;
+	
+	Controller->SetControlRotation(LookRotation);
 }
 
 void UBladeLockOnComponent::FindBestTarget()
