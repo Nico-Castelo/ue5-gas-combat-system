@@ -50,5 +50,5 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attack", meta = (ClampMin = "0.0"))
 	float Rate = 1.6f;
 	
-	UBladeWeaponTraceComponent* GetWeaponTrace() const;
+	UBladeWeaponTraceComponent* GetWeaponTraceComponent() const;
 };

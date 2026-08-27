@@ -70,7 +70,7 @@ void UBladeGameplayAbility_Attack::EndAbility(const FGameplayAbilitySpecHandle H
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
-	if (UBladeWeaponTraceComponent* Trace = GetWeaponTrace())
+	if (UBladeWeaponTraceComponent* Trace = GetWeaponTraceComponent())
 	{
 		Trace->StopTrace();
 	}
@@ -91,7 +91,7 @@ void UBladeGameplayAbility_Attack::OnRecoveryStarted(FGameplayEventData Payload)
 
 void UBladeGameplayAbility_Attack::OnHitWindowBegin(FGameplayEventData Payload)
 {
-	if (UBladeWeaponTraceComponent* Trace = GetWeaponTrace())
+	if (UBladeWeaponTraceComponent* Trace = GetWeaponTraceComponent())
 	{
 		Trace->StartTrace();
 	}
@@ -99,7 +99,7 @@ void UBladeGameplayAbility_Attack::OnHitWindowBegin(FGameplayEventData Payload)
 
 void UBladeGameplayAbility_Attack::OnHitWindowEnd(FGameplayEventData Payload)
 {
-	if (UBladeWeaponTraceComponent* Trace = GetWeaponTrace())
+	if (UBladeWeaponTraceComponent* Trace = GetWeaponTraceComponent())
 	{
 		Trace->StopTrace();
 	}
@@ -110,14 +110,18 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	if (!ensureMsgf(DamageEffect, TEXT("No Damage Effect specified for %s"), *GetNameSafe(this))) return;
 	if (!ensureMsgf(PostureDamageEffect, TEXT("No Posture Damage Effect specified for %s"), *GetNameSafe(this))) return;
 
+	UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo();
+	if (!SourceASC) return;
 	UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Payload.Target);
 	if (!TargetASC) return;
 
 	FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
-	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
+	if (!DamageSpecHandle.IsValid()) return;
+	SourceASC->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
 	
 	FGameplayEffectSpecHandle PostureSpecHandle = MakeOutgoingGameplayEffectSpec(PostureDamageEffect);
-	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*PostureSpecHandle.Data.Get(), TargetASC);
+	if (!PostureSpecHandle.IsValid()) return;
+	SourceASC->ApplyGameplayEffectSpecToTarget(*PostureSpecHandle.Data.Get(), TargetASC);
 	
 	FGameplayEventData HitReceivedPayload;
 	HitReceivedPayload.Instigator = GetAvatarActorFromActorInfo();
@@ -130,7 +134,7 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 		TargetASC->GetNumericAttribute(UBladeAttributeSet::GetPostureAttribute()));
 }
 
-UBladeWeaponTraceComponent* UBladeGameplayAbility_Attack::GetWeaponTrace() const
+UBladeWeaponTraceComponent* UBladeGameplayAbility_Attack::GetWeaponTraceComponent() const
 {
 	AActor* Avatar = GetAvatarActorFromActorInfo();
 	return Avatar ? Avatar->FindComponentByClass<UBladeWeaponTraceComponent>() : nullptr;
