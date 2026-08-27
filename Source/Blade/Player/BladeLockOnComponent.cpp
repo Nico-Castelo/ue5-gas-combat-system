@@ -61,7 +61,9 @@ void UBladeLockOnComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	FRotator LookRotation = Direction.Rotation();
 	LookRotation.Pitch += PitchOffset;
 	
-	Controller->SetControlRotation(LookRotation);
+	FRotator SmoothedRotation = FMath::RInterpTo(Controller->GetControlRotation(), LookRotation, DeltaTime, RotationSpeed);
+	
+	Controller->SetControlRotation(SmoothedRotation);
 }
 
 void UBladeLockOnComponent::FindBestTarget()
