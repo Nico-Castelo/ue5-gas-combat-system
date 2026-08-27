@@ -6,6 +6,7 @@
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "BladeAIController.generated.h"
 
+struct FGameplayTag;
 class UBehaviorTree;
 
 UCLASS()
@@ -19,6 +20,8 @@ public:
 protected:
 	
 	virtual void OnPossess(APawn* InPawn) override;
+	
+	void OnPawnDeath(const FGameplayTag Tag, int32 NewCount);
 	
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviourTree;
