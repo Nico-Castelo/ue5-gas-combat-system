@@ -6,6 +6,7 @@
 #include "Core/BladeCharacterBase.h"
 #include "BladePlayerCharacter.generated.h"
 
+class UBladeLockOnComponent;
 struct FInputActionValue;
 class UInputAction;
 class USpringArmComponent;
@@ -41,6 +42,8 @@ protected:
 	
 	void SprintEnd();
 	
+	void LockOn();
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> Input_Move;
 	
@@ -62,9 +65,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> Input_Block;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> Input_LockOn;
+	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UCameraComponent> CameraComponent;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	TObjectPtr<UBladeLockOnComponent> LockOnComponent;
 };

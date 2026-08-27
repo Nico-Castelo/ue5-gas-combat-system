@@ -8,3 +8,4 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogGame, Log, All)
 
 constexpr ECollisionChannel ECC_Weapon = ECC_GameTraceChannel1;
+constexpr ECollisionChannel ECC_LockOnTarget = ECC_GameTraceChannel2;

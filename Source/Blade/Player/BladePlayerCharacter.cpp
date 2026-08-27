@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "BladeGameplayTags.h"
+#include "BladeLockOnComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
 #include "Camera/CameraComponent.h"
@@ -24,6 +25,8 @@ ABladePlayerCharacter::ABladePlayerCharacter()
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+	
+	LockOnComponent = CreateDefaultSubobject<UBladeLockOnComponent>(TEXT("LockOnComp"));
 }
 
 void ABladePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -47,6 +50,8 @@ void ABladePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	
 	EnhancedInput->BindAction(Input_Sprint, ETriggerEvent::Triggered, this, &ABladePlayerCharacter::SprintStart);
 	EnhancedInput->BindAction(Input_Sprint, ETriggerEvent::Completed, this, &ABladePlayerCharacter::SprintEnd);
+	
+	EnhancedInput->BindAction(Input_LockOn, ETriggerEvent::Started, this, &ABladePlayerCharacter::LockOn);
 }
 
 void ABladePlayerCharacter::Move(const FInputActionValue& InValue)
@@ -105,4 +110,9 @@ void ABladePlayerCharacter::SprintEnd()
 {
 	FGameplayTagContainer SprintTags(BladeGameplayTags::Ability_Sprint);
 	ASC->CancelAbilities(&SprintTags);
+}
+
+void ABladePlayerCharacter::LockOn()
+{
+	LockOnComponent->ToggleLockOn();
 }
