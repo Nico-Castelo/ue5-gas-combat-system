@@ -37,7 +37,13 @@ protected:
 	float VerticalVelocity = 0.0f;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	float Direction = 0.0f;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Animation")
 	bool bIsBlocking = false;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	bool bIsLockedOn = false;
 	
 	UPROPERTY(Transient)
 	TObjectPtr<ACharacter> OwnerCharacter;

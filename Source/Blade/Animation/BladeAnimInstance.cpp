@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "BladeGameplayTags.h"
+#include "KismetAnimationLibrary.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -30,6 +31,7 @@ void UBladeAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	
 	bIsBlocking = OwnerASC && OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_Blocking);
+	bIsLockedOn = OwnerASC && OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_LockedOn);
 }
 
 void UBladeAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
@@ -41,4 +43,5 @@ void UBladeAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	GroundSpeed = OwnerMovementComponent->Velocity.Size2D();
 	bIsFalling = OwnerMovementComponent->IsFalling();
 	VerticalVelocity = OwnerMovementComponent->Velocity.Z;
+	Direction = UKismetAnimationLibrary::CalculateDirection(OwnerMovementComponent->Velocity, OwnerCharacter->GetActorRotation());
 }
