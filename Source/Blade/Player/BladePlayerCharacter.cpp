@@ -54,6 +54,30 @@ void ABladePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInput->BindAction(Input_LockOn, ETriggerEvent::Started, this, &ABladePlayerCharacter::LockOn);
 }
 
+void ABladePlayerCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	ASC->RegisterGameplayTagEvent(BladeGameplayTags::State_LockedOn).AddUObject(this, &ABladePlayerCharacter::OnRotationTagChanged);
+	ASC->RegisterGameplayTagEvent(BladeGameplayTags::State_Sprinting).AddUObject(this, &ABladePlayerCharacter::OnRotationTagChanged);
+	
+	UpdateRotationMode();
+}
+
+void ABladePlayerCharacter::UpdateRotationMode()
+{
+	const bool bWantsStrafe = ASC->HasMatchingGameplayTag(BladeGameplayTags::State_LockedOn)
+		&& !ASC->HasMatchingGameplayTag(BladeGameplayTags::State_Sprinting);
+	
+	GetCharacterMovement()->bOrientRotationToMovement = !bWantsStrafe;
+	GetCharacterMovement()->bUseControllerDesiredRotation = bWantsStrafe;
+}
+
+void ABladePlayerCharacter::OnRotationTagChanged(const FGameplayTag Tag, int32 NewCount)
+{
+	UpdateRotationMode();
+}
+
 void ABladePlayerCharacter::Move(const FInputActionValue& InValue)
 {
 	const FVector2D InputValue = InValue.Get<FVector2D>();

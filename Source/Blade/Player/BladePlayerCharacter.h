@@ -22,9 +22,15 @@ public:
 	ABladePlayerCharacter();
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	virtual void PossessedBy(AController* NewController) override;
 
 	
 protected:
+	
+	void UpdateRotationMode();
+	
+	void OnRotationTagChanged(const FGameplayTag Tag, int32 NewCount);
 	
 	void Move(const FInputActionValue& InValue);
 	
