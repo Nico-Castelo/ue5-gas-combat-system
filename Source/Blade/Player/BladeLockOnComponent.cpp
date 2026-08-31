@@ -22,15 +22,15 @@ void UBladeLockOnComponent::ToggleLockOn()
 {
 	UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner());
 	
-	if (CurrentTarget != nullptr || ASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead))
+	if (CurrentTarget != nullptr)
 	{
-		CurrentTarget = nullptr;
-		SetComponentTickEnabled(false);
+		ClearTarget();
+		return;
 	}
-	else
-	{
-		FindBestTarget();
-	}
+	
+	if (ASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead)) return;
+	
+	FindBestTarget();
 }
 
 void UBladeLockOnComponent::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -40,19 +40,26 @@ void UBladeLockOnComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	
 	if (!CurrentTarget)
 	{
-		SetComponentTickEnabled(false);
+		ClearTarget();
 		return;
 	}
 	
 	UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(CurrentTarget);
 	if (!TargetASC || TargetASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead))
 	{
-		CurrentTarget = nullptr;
-		SetComponentTickEnabled(false);
+		ClearTarget();
+		return;
+	}
+	
+	UAbilitySystemComponent* OwnerASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner());
+	if (!OwnerASC || OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead))
+	{
+		ClearTarget();
 		return;
 	}
 	
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	
 	AController* Controller = OwnerPawn ? OwnerPawn->GetController() : nullptr;
 	if (!Controller) return;
 		
@@ -113,7 +120,17 @@ void UBladeLockOnComponent::FindBestTarget()
 	
 	if (CurrentTarget)
 	{
+		UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner());
+		ASC->AddLooseGameplayTag(BladeGameplayTags::State_LockedOn);
 		SetComponentTickEnabled(true);
 	}
+}
+
+void UBladeLockOnComponent::ClearTarget()
+{
+	UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner());
+	ASC->RemoveLooseGameplayTag(BladeGameplayTags::State_LockedOn);
+	CurrentTarget = nullptr;
+	SetComponentTickEnabled(false);
 }
 

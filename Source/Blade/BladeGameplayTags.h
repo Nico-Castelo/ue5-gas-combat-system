@@ -22,6 +22,7 @@ namespace BladeGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Blocking);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Sprinting);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Dead);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_LockedOn);
 	
 	// Event tags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Recover);

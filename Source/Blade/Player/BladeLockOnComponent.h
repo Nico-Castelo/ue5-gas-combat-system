@@ -25,6 +25,8 @@ protected:
 
 	void FindBestTarget();
 	
+	void ClearTarget();
+	
 	UPROPERTY(EditDefaultsOnly, Category= "Lock")
 	float PitchOffset = -15.0f;
 	
@@ -35,6 +37,5 @@ protected:
 	TObjectPtr<AActor> CurrentTarget = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Lock")
-	float TargetRadius = 500.0f;
-	
+	float TargetRadius = 1000.0f;
 };

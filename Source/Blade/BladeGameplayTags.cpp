@@ -18,6 +18,7 @@ namespace BladeGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(State_Blocking, "State.Blocking");
 	UE_DEFINE_GAMEPLAY_TAG(State_Sprinting, "State.Sprinting");
 	UE_DEFINE_GAMEPLAY_TAG(State_Dead, "State.Dead");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_LockedOn, "State.LockedOn", "Loose tag owned by LockOn component while target is locked. Drives the strafe rotation, the abp and directional dodge");
 	
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Recover, "Event.Montage.Recover", "Sent from the attack montage when recovery starts. The attack ability clears the committed state, opening the cancel window");
