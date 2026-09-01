@@ -25,6 +25,10 @@ protected:
 	
 	UFUNCTION()
 	void OnRecoveryStarted(FGameplayEventData Payload);
+	
+	// Order matches DirectionIndex: F, FR, R, BR, B, BL, L, FL
+	UPROPERTY(EditDefaultsOnly, Category = "Evade")
+	TArray<TObjectPtr<UAnimMontage>> DirectionalEvadeMontages;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Evade")
 	TObjectPtr<UAnimMontage> EvadeMontage;

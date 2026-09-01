@@ -1,8 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BladeGameplayAbility_Evade.h"
+
+#include "AbilitySystemComponent.h"
 #include "Blade.h"
 #include "BladeGameplayTags.h"
+#include "KismetAnimationLibrary.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -36,12 +39,44 @@ void UBladeGameplayAbility_Evade::ActivateAbility(const FGameplayAbilitySpecHand
 		return;
 	}
 	
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
+	UAnimMontage* MontageToPlay = EvadeMontage;
+	if (ASC && ASC->HasMatchingGameplayTag(BladeGameplayTags::State_LockedOn))
+	{
+		
+		const AActor* Avatar = GetAvatarActorFromActorInfo();
+		
+		const UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(ActorInfo->MovementComponent.Get());
+		if (Avatar && CharacterMovementComponent)
+		{
+			const FVector MoveInput = CharacterMovementComponent->GetPendingInputVector();
+			
+			float EvadeAngle = 0.0f;
+			
+			if (!MoveInput.IsNearlyZero())
+			{
+				EvadeAngle = UKismetAnimationLibrary::CalculateDirection(MoveInput, Avatar->GetActorRotation());
+				
+				const int32 DirectionIndex = (FMath::RoundToInt(EvadeAngle / 45.0f) + 8) % 8;
+				
+				if (DirectionalEvadeMontages.IsValidIndex(DirectionIndex) && DirectionalEvadeMontages[DirectionIndex])
+				{
+					MontageToPlay = DirectionalEvadeMontages[DirectionIndex];
+				}
+				else
+				{
+					ensureMsgf(false, TEXT("DirectionalEvadeMontages: Invalid index %d"), DirectionIndex);
+				}
+			}
+		}
+	}
+	
 	UAbilityTask_WaitGameplayEvent* WaitRecover = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this, BladeGameplayTags::Event_Montage_Recover, nullptr, true);
 	WaitRecover->EventReceived.AddDynamic(this, &UBladeGameplayAbility_Evade::OnRecoveryStarted);
 	WaitRecover->ReadyForActivation();
 
-	PlayMontageAndEndOnCompletion(EvadeMontage, Rate, RootMotionScale);
+	PlayMontageAndEndOnCompletion(MontageToPlay, Rate, RootMotionScale);
 
 	UE_LOG(LogGame, Verbose, TEXT("Evade activated on %s"), *GetNameSafe(GetAvatarActorFromActorInfo()));
 }
