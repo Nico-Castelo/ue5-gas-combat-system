@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Animation")
 	bool bIsLockedOn = false;
 	
+	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	bool bIsSprinting = false;
+	
 	UPROPERTY(Transient)
 	TObjectPtr<ACharacter> OwnerCharacter;
 	

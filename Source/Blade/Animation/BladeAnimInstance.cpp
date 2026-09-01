@@ -32,6 +32,7 @@ void UBladeAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	
 	bIsBlocking = OwnerASC && OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_Blocking);
 	bIsLockedOn = OwnerASC && OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_LockedOn);
+	bIsSprinting = OwnerASC && OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_Sprinting);
 }
 
 void UBladeAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
