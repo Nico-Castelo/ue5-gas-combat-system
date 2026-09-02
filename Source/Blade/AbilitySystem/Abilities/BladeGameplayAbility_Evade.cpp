@@ -25,6 +25,7 @@ UBladeGameplayAbility_Evade::UBladeGameplayAbility_Evade()
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Dead);
 	
 	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Block);
+	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Attack);
 }
 
 void UBladeGameplayAbility_Evade::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

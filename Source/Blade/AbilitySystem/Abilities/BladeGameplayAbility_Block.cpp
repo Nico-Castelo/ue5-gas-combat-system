@@ -13,11 +13,14 @@ UBladeGameplayAbility_Block::UBladeGameplayAbility_Block()
 	SetAssetTags(Tags);
 	
 	ActivationOwnedTags.AddTag(BladeGameplayTags::State_Blocking);
+	
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Attacking_Committed);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Evading);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_HitReacting);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Dead);
+	
 	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Sprint);
+	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Attack);
 }
 
 void UBladeGameplayAbility_Block::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
