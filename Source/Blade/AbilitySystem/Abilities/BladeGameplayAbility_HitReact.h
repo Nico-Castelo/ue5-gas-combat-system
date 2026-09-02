@@ -34,9 +34,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
-	TObjectPtr<UAnimMontage> BlockHitMontage;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation", meta = (ClampMin = "0.0"))
 	float RootMotionScale = 1.0f;
 	

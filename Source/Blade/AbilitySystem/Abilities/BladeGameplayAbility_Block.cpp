@@ -5,6 +5,8 @@
 
 #include "AbilitySystemComponent.h"
 #include "BladeGameplayTags.h"
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
 UBladeGameplayAbility_Block::UBladeGameplayAbility_Block()
 {
@@ -40,6 +42,11 @@ void UBladeGameplayAbility_Block::ActivateAbility(const FGameplayAbilitySpecHand
 		const FGameplayEffectSpecHandle Spec = MakeOutgoingGameplayEffectSpec(SlowEffect);
 		SlowEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, Spec);
 	}
+	
+	UAbilityTask_WaitGameplayEvent* BlockHitEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this, BladeGameplayTags::Event_Combat_HitReceived, nullptr, false);
+	BlockHitEvent->EventReceived.AddDynamic(this, &UBladeGameplayAbility_Block::OnBlockHit);
+	BlockHitEvent->ReadyForActivation();
 }
 
 void UBladeGameplayAbility_Block::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -57,4 +64,23 @@ void UBladeGameplayAbility_Block::EndAbility(const FGameplayAbilitySpecHandle Ha
 	}
 	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+void UBladeGameplayAbility_Block::OnBlockHit(FGameplayEventData Payload)
+{
+	if (!ensureMsgf(BlockHitMontage, TEXT("BlockHitMontage not set on %s"), *GetName()))
+	{
+		return;
+	}
+	
+	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+		this,
+		NAME_None,
+		BlockHitMontage,
+		1.0f,
+		NAME_None,
+		true,
+		1.0f
+	);
+	MontageTask->ReadyForActivation();
 }

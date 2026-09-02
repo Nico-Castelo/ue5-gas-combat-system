@@ -15,8 +15,10 @@ UBladeGameplayAbility_HitReact::UBladeGameplayAbility_HitReact()
 	SetAssetTags(Tags);
 
 	ActivationOwnedTags.AddTag(BladeGameplayTags::State_HitReacting);
+	
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_HitReacting);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Dead);
+	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Blocking);
 
 	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Attack);
 	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Evade);
@@ -36,22 +38,6 @@ void UBladeGameplayAbility_HitReact::ActivateAbility(const FGameplayAbilitySpecH
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
-		return;
-	}
-	
-	if (GetAbilitySystemComponentFromActorInfo()->HasMatchingGameplayTag(BladeGameplayTags::State_Blocking))
-	{
-		if (!ensureMsgf(BlockHitMontage, TEXT("No BlockHitMontage assigned for %s"), *GetNameSafe(this)))
-		{
-			EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
-			return;
-		}
-		
-		PlayMontageAndEndOnCompletion(BlockHitMontage, Rate, RootMotionScale);
-
-		UE_LOG(LogGame, Verbose, TEXT("BlockedHit on %s from %s"),
-			*GetNameSafe(GetAvatarActorFromActorInfo()),
-			TriggerEventData ? *GetNameSafe(TriggerEventData->Instigator) : TEXT("Unknown"));
 		return;
 	}
 
