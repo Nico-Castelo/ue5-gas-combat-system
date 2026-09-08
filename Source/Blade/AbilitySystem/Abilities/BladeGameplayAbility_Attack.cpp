@@ -4,8 +4,10 @@
 #include "AbilitySystemGlobals.h"
 #include "Blade.h"
 #include "BladeGameplayTags.h"
+#include "MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "AbilitySystem/Attributes/BladeAttributeSet.h"
+#include "Core/BladeCharacterBase.h"
 #include "Core/BladeWeaponTraceComponent.h"
 
 UBladeGameplayAbility_Attack::UBladeGameplayAbility_Attack()
@@ -29,6 +31,17 @@ void UBladeGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHan
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+	ABladeCharacterBase* Character = Cast<ABladeCharacterBase>(GetAvatarActorFromActorInfo());
+	check(Character);
+	
+	const AActor* Target = Character->GetCombatTarget();
+	UMotionWarpingComponent* MotionWarpingComp = GetMotionWarpingComponent();
+	
+	if (Target && MotionWarpingComp)
+	{
+		MotionWarpingComp->AddOrUpdateWarpTargetFromComponent(WarpTargetName, Target->GetRootComponent(), NAME_None, true, EWarpTargetLocationOffsetDirection::TargetsForwardVector);
+	}
 	
 	ComboIndex = 0;
 	bComboInputQueued = false;
@@ -113,6 +126,11 @@ void UBladeGameplayAbility_Attack::EndAbility(const FGameplayAbilitySpecHandle H
 	if (ASC->HasMatchingGameplayTag(BladeGameplayTags::State_Attacking_Committed))
 	{
 		ASC->RemoveLooseGameplayTag(BladeGameplayTags::State_Attacking_Committed);
+	}
+	
+	if (UMotionWarpingComponent* MotionWarpingComp = GetMotionWarpingComponent())
+	{
+		MotionWarpingComp->RemoveWarpTarget(WarpTargetName);
 	}
 	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
@@ -231,4 +249,10 @@ UBladeWeaponTraceComponent* UBladeGameplayAbility_Attack::GetWeaponTraceComponen
 {
 	AActor* Avatar = GetAvatarActorFromActorInfo();
 	return Avatar ? Avatar->FindComponentByClass<UBladeWeaponTraceComponent>() : nullptr;
+}
+
+UMotionWarpingComponent* UBladeGameplayAbility_Attack::GetMotionWarpingComponent() const
+{
+	AActor* Avatar = GetAvatarActorFromActorInfo();
+	return Avatar ? Avatar->FindComponentByClass<UMotionWarpingComponent>() : nullptr;
 }

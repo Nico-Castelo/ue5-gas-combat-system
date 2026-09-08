@@ -4,6 +4,7 @@
 #include "BladeGameplayAbility.h"
 #include "BladeGameplayAbility_Attack.generated.h"
 
+class UMotionWarpingComponent;
 class UBladeWeaponTraceComponent;
 
 UCLASS()
@@ -62,6 +63,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TSubclassOf<UGameplayEffect> PostureDamageEffect;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	FName WarpTargetName = TEXT("CombatTarget");
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Attack", meta = (ClampMin = "0.0"))
 	float RootMotionScale = 1.0f;
 	
@@ -69,4 +73,6 @@ protected:
 	float Rate = 1.6f;
 	
 	UBladeWeaponTraceComponent* GetWeaponTraceComponent() const;
+	
+	UMotionWarpingComponent* GetMotionWarpingComponent() const;
 };
