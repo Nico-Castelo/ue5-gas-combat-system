@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "BladePlayerCharacter.h"
 
 #include "AbilitySystemComponent.h"
@@ -98,6 +95,8 @@ void ABladePlayerCharacter::Move(const FInputActionValue& InValue)
 
 void ABladePlayerCharacter::Look(const FInputActionValue& InValue)
 {
+	if (ASC->HasMatchingGameplayTag(BladeGameplayTags::State_LockedOn)) return;
+	
 	const FVector2D InputValue = InValue.Get<FVector2D>();
 	
 	AddControllerPitchInput(InputValue.Y);
@@ -106,6 +105,16 @@ void ABladePlayerCharacter::Look(const FInputActionValue& InValue)
 
 void ABladePlayerCharacter::Attack()
 {
+	if (ASC->HasMatchingGameplayTag(BladeGameplayTags::State_Attacking))
+	{
+		FGameplayEventData Payload;
+		Payload.Instigator = this;
+		
+		ASC->HandleGameplayEvent(BladeGameplayTags::Event_Input_ComboQueued, &Payload);
+		
+		return;
+	}
+	
 	ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(BladeGameplayTags::Ability_Attack));
 }
 

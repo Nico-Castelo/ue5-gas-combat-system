@@ -28,8 +28,11 @@ namespace BladeGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Recover);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_HitWindow_Begin);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_HitWindow_End);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_ComboWindow_Begin);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_ComboWindow_End);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_HitDealt);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_HitReceived);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_Death);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Input_ComboQueued);
 }

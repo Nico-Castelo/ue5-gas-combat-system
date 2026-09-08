@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -23,6 +21,8 @@ protected:
 	
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
+	void AdvanceCombo(bool bJumpNow);
+	
 	UFUNCTION()
 	void OnRecoveryStarted(FGameplayEventData Payload);
 	
@@ -30,10 +30,28 @@ protected:
 	void OnHitWindowBegin(FGameplayEventData Payload);
 	
 	UFUNCTION()
+	void OnComboWindowBegin(FGameplayEventData Payload);
+	
+	UFUNCTION()
+	void OnComboWindowEnd(FGameplayEventData Payload);
+	
+	UFUNCTION()
 	void OnHitWindowEnd(FGameplayEventData Payload);
 	
 	UFUNCTION()
 	void OnWeaponHit(FGameplayEventData Payload);
+	
+	UFUNCTION()
+	void OnComboQueued(FGameplayEventData Payload);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	TArray<FName> ComboSections;
+	
+	int32 ComboIndex = 0;
+	
+	bool bComboWindowOpen = false;
+	
+	bool bComboInputQueued = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TObjectPtr<UAnimMontage> AttackMontage;
