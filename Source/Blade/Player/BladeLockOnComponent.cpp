@@ -133,4 +133,3 @@ void UBladeLockOnComponent::ClearTarget()
 	CurrentTarget = nullptr;
 	SetComponentTickEnabled(false);
 }
-

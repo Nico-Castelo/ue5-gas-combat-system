@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "BladeCharacterBase.generated.h"
 
+class UMotionWarpingComponent;
 class UGameplayEffect;
 struct FOnAttributeChangeData;
 class UBladeWeaponTraceComponent;
@@ -15,7 +16,7 @@ class UGameplayAbility;
 class UBladeAttributeSet;
 class UAbilitySystemComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class BLADE_API ABladeCharacterBase : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
@@ -28,6 +29,8 @@ public:
 	
 	virtual void PossessedBy(AController* NewController) override;
 	
+	virtual AActor* GetCombatTarget() const;
+	
 protected:
 	
 	void OnMoveSpeedChanged(const FOnAttributeChangeData& Data);
@@ -36,6 +39,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Ability System")
 	TObjectPtr<UAbilitySystemComponent> ASC;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Motion Warping")
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComp;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Ability System")
 	TObjectPtr<UBladeAttributeSet> AttributeSet;

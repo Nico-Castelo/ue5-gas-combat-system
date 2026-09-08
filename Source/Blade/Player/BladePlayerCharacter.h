@@ -50,6 +50,8 @@ protected:
 	
 	void LockOn();
 	
+	virtual AActor* GetCombatTarget() const override;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> Input_Move;
 	

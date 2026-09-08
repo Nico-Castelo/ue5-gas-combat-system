@@ -149,3 +149,8 @@ void ABladePlayerCharacter::LockOn()
 {
 	LockOnComponent->ToggleLockOn();
 }
+
+AActor* ABladePlayerCharacter::GetCombatTarget() const
+{
+	return LockOnComponent ? LockOnComponent->GetCurrentTarget() : nullptr;
+}

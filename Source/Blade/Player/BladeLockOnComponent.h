@@ -38,4 +38,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Lock")
 	float TargetRadius = 1000.0f;
+	
+public:
+	
+	AActor* GetCurrentTarget() const { return CurrentTarget; }
 };
