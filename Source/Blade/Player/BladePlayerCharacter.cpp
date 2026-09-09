@@ -40,6 +40,8 @@ void ABladePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	
 	EnhancedInput->BindAction(Input_Attack, ETriggerEvent::Started, this, &ABladePlayerCharacter::Attack);
 	
+	EnhancedInput->BindAction(Input_Block, ETriggerEvent::Started, this, &ABladePlayerCharacter::BlockPressed);
+	
 	EnhancedInput->BindAction(Input_Block, ETriggerEvent::Triggered, this, &ABladePlayerCharacter::BlockStart);
 	EnhancedInput->BindAction(Input_Block, ETriggerEvent::Completed, this, &ABladePlayerCharacter::BlockEnd);
 	
@@ -148,6 +150,14 @@ void ABladePlayerCharacter::SprintEnd()
 void ABladePlayerCharacter::LockOn()
 {
 	LockOnComponent->ToggleLockOn();
+}
+
+void ABladePlayerCharacter::BlockPressed()
+{
+	FGameplayEventData Payload;
+	Payload.Instigator = this;
+	
+	ASC->HandleGameplayEvent(BladeGameplayTags::Event_Input_BlockPressed, &Payload);
 }
 
 AActor* ABladePlayerCharacter::GetCombatTarget() const

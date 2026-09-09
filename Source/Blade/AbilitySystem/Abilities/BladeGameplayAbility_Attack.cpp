@@ -47,6 +47,7 @@ void UBladeGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHan
 	ComboIndex = 0;
 	bComboInputQueued = false;
 	bComboWindowOpen = false;
+	bBlockCancelWindowOpen = true;
 	
 	if (!ensureMsgf(AttackMontage, TEXT("No AttackMontage specified for %s"), *GetNameSafe(this)))
 	{
@@ -75,6 +76,16 @@ void UBladeGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHan
 	this, BladeGameplayTags::Event_Input_ComboQueued, nullptr, false);
 	WaitCombo->EventReceived.AddDynamic(this, &UBladeGameplayAbility_Attack::OnComboQueued);
 	WaitCombo->ReadyForActivation();
+	
+	UAbilityTask_WaitGameplayEvent* WaitBlockPressed = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this, BladeGameplayTags::Event_Input_BlockPressed, nullptr, false);
+	WaitBlockPressed->EventReceived.AddDynamic(this, &UBladeGameplayAbility_Attack::OnBlockPressed);
+	WaitBlockPressed->ReadyForActivation();
+	
+	UAbilityTask_WaitGameplayEvent* BlockCancelEnd = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this, BladeGameplayTags::Event_Montage_BlockCancel_End, nullptr, false);
+	BlockCancelEnd->EventReceived.AddDynamic(this, &UBladeGameplayAbility_Attack::OnBlockCancelWindowEnd);
+	BlockCancelEnd->ReadyForActivation();
 	
 	UAbilityTask_WaitGameplayEvent* ComboWindowBegin = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this, BladeGameplayTags::Event_Montage_ComboWindow_Begin, nullptr, false);
@@ -143,6 +154,10 @@ void UBladeGameplayAbility_Attack::AdvanceCombo(bool bJumpNow)
 	bComboInputQueued = false;
 	
 	if (!ComboSections.IsValidIndex(NextSection)) return;
+	
+	bBlockCancelWindowOpen = true;
+	
+	// @todo: else is not being used but will be kept for now.
 	
 	if (bJumpNow)
 	{
@@ -244,6 +259,19 @@ void UBladeGameplayAbility_Attack::OnComboQueued(FGameplayEventData Payload)
 	{
 		AdvanceCombo(true);
 	}
+}
+
+void UBladeGameplayAbility_Attack::OnBlockPressed(FGameplayEventData Payload)
+{
+	// @todo: Animations are too fast to react and deflect or early cancel attacks
+	if (!bBlockCancelWindowOpen) return;
+	
+	CancelAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
+}
+
+void UBladeGameplayAbility_Attack::OnBlockCancelWindowEnd(FGameplayEventData Payload)
+{
+	bBlockCancelWindowOpen = false;
 }
 
 UBladeWeaponTraceComponent* UBladeGameplayAbility_Attack::GetWeaponTraceComponent() const

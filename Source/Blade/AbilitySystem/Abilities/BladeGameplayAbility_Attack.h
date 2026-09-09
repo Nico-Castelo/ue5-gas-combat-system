@@ -45,6 +45,12 @@ protected:
 	UFUNCTION()
 	void OnComboQueued(FGameplayEventData Payload);
 	
+	UFUNCTION()
+	void OnBlockPressed(FGameplayEventData Payload);
+	
+	UFUNCTION()
+	void OnBlockCancelWindowEnd(FGameplayEventData Payload);
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TArray<FName> ComboSections;
 	
@@ -53,6 +59,8 @@ protected:
 	bool bComboWindowOpen = false;
 	
 	bool bComboInputQueued = false;
+	
+	bool bBlockCancelWindowOpen = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TObjectPtr<UAnimMontage> AttackMontage;

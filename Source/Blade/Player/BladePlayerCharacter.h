@@ -38,6 +38,8 @@ protected:
 	
 	void Attack();
 	
+	void BlockPressed();
+	
 	void BlockStart();
 	
 	void BlockEnd();

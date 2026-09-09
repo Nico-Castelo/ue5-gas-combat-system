@@ -26,10 +26,12 @@ namespace BladeGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_HitWindow_End, "Event.Montage.HitWindow.End", "Trace component is now deactivated");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_ComboWindow_Begin, "Event.Montage.ComboWindow.Begin", "The combo window is now open. The attack ability will queue the next combo if input is received");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_ComboWindow_End, "Event.Montage.ComboWindow.End", "The combo window is now closed. The attack ability will ignore any combo input received");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_BlockCancel_End, "Event.Montage.BlockCancel.End", "Closes the early attack cancellation window for a new block press");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Combat_HitDealt, "Event.Combat.HitDealt", "Sent to the attacker's own ASC when their weapon trace confirms a hit. Consumed by the attack ability to apply damage.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Combat_HitReceived, "Event.Combat.HitReceived", "Sent to the victim's ASC when a hit lands on them. Triggers the hit react ability.");
 	UE_DEFINE_GAMEPLAY_TAG(Event_Combat_Death, "Event.Combat.Death");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Input_ComboQueued, "Event.Input.ComboQueued", "Sent when a combo input is queued.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Input_BlockPressed, "Event.Input.BlockPressed", "Sent when block is pressed but not hold");
 }
