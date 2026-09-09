@@ -35,6 +35,7 @@ void UBladeGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHan
 	ABladeCharacterBase* Character = Cast<ABladeCharacterBase>(GetAvatarActorFromActorInfo());
 	check(Character);
 	
+	// @todo: Update or remove the warp target when lock-on changes during an active combo.
 	const AActor* Target = Character->GetCombatTarget();
 	UMotionWarpingComponent* MotionWarpingComp = GetMotionWarpingComponent();
 	
