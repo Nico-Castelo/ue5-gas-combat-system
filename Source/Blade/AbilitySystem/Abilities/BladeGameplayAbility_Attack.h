@@ -72,6 +72,9 @@ protected:
 	TSubclassOf<UGameplayEffect> PostureDamageEffect;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	TSubclassOf<UGameplayEffect> DeflectPostureDamageEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	FName WarpTargetName = TEXT("CombatTarget");
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Attack", meta = (ClampMin = "0.0"))

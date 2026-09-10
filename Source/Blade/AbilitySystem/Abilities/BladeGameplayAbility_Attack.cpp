@@ -220,6 +220,7 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 {
 	if (!ensureMsgf(DamageEffect, TEXT("No Damage Effect specified for %s"), *GetNameSafe(this))) return;
 	if (!ensureMsgf(PostureDamageEffect, TEXT("No Posture Damage Effect specified for %s"), *GetNameSafe(this))) return;
+	if (!ensureMsgf(DeflectPostureDamageEffect, TEXT("No Deflect Posture Damage Effect specified for %s"), *GetNameSafe(this))) return;
 
 	UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo();
 	if (!SourceASC) return;
@@ -228,9 +229,22 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	
 	// @todo: Pending refactor for core gameplay and deflect window
 
-	FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
-	if (!DamageSpecHandle.IsValid()) return;
-	SourceASC->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
+	const bool bIsBlocking = TargetASC->HasMatchingGameplayTag(BladeGameplayTags::State_Blocking);
+	const bool bWasDeflected = bIsBlocking && TargetASC->HasMatchingGameplayTag(BladeGameplayTags::State_DeflectWindow);
+
+	if (bWasDeflected)
+	{
+		FGameplayEffectSpecHandle DeflectPostureSpecHandle = TargetASC->MakeOutgoingSpec(DeflectPostureDamageEffect, GetAbilityLevel(), TargetASC->MakeEffectContext());
+		if (!DeflectPostureSpecHandle.IsValid()) return;
+
+		TargetASC->ApplyGameplayEffectSpecToTarget(*DeflectPostureSpecHandle.Data.Get(), SourceASC);
+	}
+	else if (!bIsBlocking)
+	{
+		FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
+		if (!DamageSpecHandle.IsValid()) return;
+		SourceASC->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
+	}
 	
 	FGameplayEffectSpecHandle PostureSpecHandle = MakeOutgoingGameplayEffectSpec(PostureDamageEffect);
 	if (!PostureSpecHandle.IsValid()) return;
@@ -241,8 +255,11 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	HitReceivedPayload.Target = Payload.Target;
 	TargetASC->HandleGameplayEvent(BladeGameplayTags::Event_Combat_HitReceived, &HitReceivedPayload);
 
-	UE_LOG(LogGame, Verbose, TEXT("Hit resolved: %s -> %s - Health now %.0f, Posture now %.0f"),
+	const TCHAR* HitResult = bWasDeflected ? TEXT("Deflect") : bIsBlocking ? TEXT("Block") : TEXT("Clean");
+	UE_LOG(LogGame, Log, TEXT("Hit resolved [%s]: %s -> %s | Attacker Posture %.0f | Defender Health %.0f, Posture %.0f"),
+		HitResult,
 		*GetNameSafe(GetAvatarActorFromActorInfo()), *GetNameSafe(Payload.Target),
+		SourceASC->GetNumericAttribute(UBladeAttributeSet::GetPostureAttribute()),
 		TargetASC->GetNumericAttribute(UBladeAttributeSet::GetHealthAttribute()),
 		TargetASC->GetNumericAttribute(UBladeAttributeSet::GetPostureAttribute()));
 }
@@ -278,12 +295,12 @@ void UBladeGameplayAbility_Attack::OnBlockCancelWindowEnd(FGameplayEventData Pay
 
 UBladeWeaponTraceComponent* UBladeGameplayAbility_Attack::GetWeaponTraceComponent() const
 {
-	AActor* Avatar = GetAvatarActorFromActorInfo();
+	const AActor* Avatar = GetAvatarActorFromActorInfo();
 	return Avatar ? Avatar->FindComponentByClass<UBladeWeaponTraceComponent>() : nullptr;
 }
 
 UMotionWarpingComponent* UBladeGameplayAbility_Attack::GetMotionWarpingComponent() const
 {
-	AActor* Avatar = GetAvatarActorFromActorInfo();
+	const AActor* Avatar = GetAvatarActorFromActorInfo();
 	return Avatar ? Avatar->FindComponentByClass<UMotionWarpingComponent>() : nullptr;
 }
