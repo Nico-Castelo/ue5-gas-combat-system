@@ -225,6 +225,8 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	if (!SourceASC) return;
 	UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Payload.Target);
 	if (!TargetASC) return;
+	
+	// @todo: Pending refactor for core gameplay and deflect window
 
 	FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
 	if (!DamageSpecHandle.IsValid()) return;
