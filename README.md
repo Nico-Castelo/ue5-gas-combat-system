@@ -20,20 +20,22 @@ The main goal of the project is to build a strong understanding of the Gameplay 
   * Hit reactions
   * Evade — dodge montage with root motion
   * Sprint — held ability that overrides movement speed through a Gameplay Effect
-* Upper-body layering on block hit (torso reacts, legs keep locomotion)
 * C++ & Blueprint integration
 * Sword combat animation set
-* 1v1 duel AI using Behavior Trees — the AI uses the same Gameplay Abilities as the player. The Behavior Tree decides when, the ability decides what. It also blocks reactively when threatened.
+* Duel AI using Behavior Trees — the AI uses the same Gameplay Abilities as the player.
+* Lock-on and directional strafe movement
+* Attack combos
+* Parry / deflect mechanic
 
 # Planned / WIP
 
-* Combos
-* Parry / deflect
+* Thinking to switch animation pack with something that fits better with sekiro combat flow. (9CG - Feels made for hack & slash or fast combat games) Still looking for a pack that fits.
 * Posture break
 * Executions
-* Lock-on and directional strafe movement (in progress)
+* Sounds and VFX with gameplaycues for combat (Don't have this assets yet).
+* Improve overall combat components like hit detections with the trace component & Lock component.
 
-I intentionally want to keep the planned feature list limited until the main gameplay combat loop is finished. I prefer a polished core loop first and then keep adding sekiro-like features.
+I intentionally want to keep the planned feature list limited until the main gameplay combat loop is finished. I prefer keep polishing core combat loop and then keep adding sekiro-like features.
 
 # Credits
 
