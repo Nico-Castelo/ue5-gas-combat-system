@@ -13,6 +13,7 @@ namespace BladeGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Block);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Sprint);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Death);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_PostureBreak);
 	
 	// State tags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);
@@ -24,6 +25,7 @@ namespace BladeGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Sprinting);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Dead);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_LockedOn);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_PostureBroken);
 	
 	// Event tags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Recover);
@@ -32,10 +34,12 @@ namespace BladeGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_ComboWindow_Begin);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_ComboWindow_End);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_BlockCancel_End);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Knockdown_Begin);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_HitDealt);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_HitReceived);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_Death);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_PostureBroken);
 	
 	// Input tags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Input_ComboQueued);
