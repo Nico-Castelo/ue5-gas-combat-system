@@ -16,7 +16,6 @@ UBladeGameplayAbility_HitReact::UBladeGameplayAbility_HitReact()
 
 	ActivationOwnedTags.AddTag(BladeGameplayTags::State_HitReacting);
 	
-	ActivationBlockedTags.AddTag(BladeGameplayTags::State_HitReacting);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Dead);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Blocking);
 
@@ -26,6 +25,7 @@ UBladeGameplayAbility_HitReact::UBladeGameplayAbility_HitReact()
 	FAbilityTriggerData TriggerData;
 	TriggerData.TriggerTag = BladeGameplayTags::Event_Combat_HitReceived;
 	TriggerData.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
+	bRetriggerInstancedAbility = true;
 	AbilityTriggers.Add(TriggerData);
 }
 
