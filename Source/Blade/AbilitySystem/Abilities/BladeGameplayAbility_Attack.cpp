@@ -22,6 +22,7 @@ UBladeGameplayAbility_Attack::UBladeGameplayAbility_Attack()
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Evading);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_HitReacting);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Dead);
+	ActivationBlockedTags.AddTag(BladeGameplayTags::State_PostureBroken);
 	
 	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Block);
 }
@@ -177,6 +178,31 @@ void UBladeGameplayAbility_Attack::AdvanceCombo(bool bJumpNow)
 	ASC->AddLooseGameplayTag(BladeGameplayTags::State_Attacking_Committed);
 }
 
+void UBladeGameplayAbility_Attack::TryTriggerPostureBreak(UAbilitySystemComponent* BrokenASC, const AActor* BrokenActor,
+	const AActor* BreakInstigator)
+{
+	if (!BrokenASC || !BrokenActor || !BreakInstigator)
+	{
+		return;
+	}
+
+	if (BrokenASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead) || BrokenASC->HasMatchingGameplayTag(BladeGameplayTags::State_PostureBroken))
+	{
+		return;
+	}
+
+	const float CurrentPosture = BrokenASC->GetNumericAttribute(UBladeAttributeSet::GetPostureAttribute());
+	const float MaxPosture = BrokenASC->GetNumericAttribute(UBladeAttributeSet::GetMaxPostureAttribute());
+
+	if (CurrentPosture < MaxPosture) return;
+
+	FGameplayEventData PostureBrokenPayload;
+	PostureBrokenPayload.Instigator = BreakInstigator;
+	PostureBrokenPayload.Target = BrokenActor;
+
+	BrokenASC->HandleGameplayEvent(BladeGameplayTags::Event_Combat_PostureBroken, &PostureBrokenPayload);
+}
+
 void UBladeGameplayAbility_Attack::OnRecoveryStarted(FGameplayEventData Payload)
 {
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
@@ -223,7 +249,11 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	if (!ensureMsgf(DeflectPostureDamageEffect, TEXT("No Deflect Posture Damage Effect specified for %s"), *GetNameSafe(this))) return;
 
 	UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo();
-	if (!SourceASC) return;
+
+	const AActor* SourceActor = GetAvatarActorFromActorInfo();
+
+	if (!SourceASC || !SourceActor) return;
+
 	UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Payload.Target);
 	if (!TargetASC) return;
 	
@@ -242,14 +272,26 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	else if (!bIsBlocking)
 	{
 		FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
+
 		if (!DamageSpecHandle.IsValid()) return;
+
 		SourceASC->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
 	}
-	
+
 	FGameplayEffectSpecHandle PostureSpecHandle = MakeOutgoingGameplayEffectSpec(PostureDamageEffect);
 	if (!PostureSpecHandle.IsValid()) return;
+
 	SourceASC->ApplyGameplayEffectSpecToTarget(*PostureSpecHandle.Data.Get(), TargetASC);
 	
+	if (bWasDeflected)
+	{
+		TryTriggerPostureBreak(SourceASC, SourceActor, Payload.Target);
+	}
+	else
+	{
+		TryTriggerPostureBreak(TargetASC, Payload.Target, SourceActor);
+	}
+
 	FGameplayEventData HitReceivedPayload;
 	HitReceivedPayload.Instigator = GetAvatarActorFromActorInfo();
 	HitReceivedPayload.Target = Payload.Target;

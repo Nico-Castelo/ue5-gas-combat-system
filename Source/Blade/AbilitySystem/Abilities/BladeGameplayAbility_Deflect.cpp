@@ -9,6 +9,8 @@ UBladeGameplayAbility_Deflect::UBladeGameplayAbility_Deflect()
 	TriggerData.TriggerTag = BladeGameplayTags::Event_Input_BlockPressed;
 	TriggerData.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
 	AbilityTriggers.Add(TriggerData);
+
+	ActivationBlockedTags.AddTag(BladeGameplayTags::State_PostureBroken);
 }
 
 void UBladeGameplayAbility_Deflect::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

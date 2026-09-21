@@ -24,6 +24,8 @@ protected:
 	
 	void AdvanceCombo(bool bJumpNow);
 	
+	void TryTriggerPostureBreak(UAbilitySystemComponent* BrokenASC, const AActor* BrokenActor, const AActor* BreakInstigator);
+
 	UFUNCTION()
 	void OnRecoveryStarted(FGameplayEventData Payload);
 	

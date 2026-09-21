@@ -34,7 +34,7 @@ namespace BladeGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_ComboWindow_Begin);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_ComboWindow_End);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_BlockCancel_End);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Knockdown_Begin);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_KnockdownLoop_Begin);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_HitDealt);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_HitReceived);
