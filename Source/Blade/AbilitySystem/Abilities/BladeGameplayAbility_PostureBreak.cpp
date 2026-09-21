@@ -42,3 +42,21 @@ void UBladeGameplayAbility_PostureBreak::ActivateAbility(const FGameplayAbilityS
 	PlayMontageAndEndOnCompletion(PostureBreakMontage);
 	
 }
+
+void UBladeGameplayAbility_PostureBreak::EndAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	bool bReplicateEndAbility, bool bWasCancelled)
+{
+	if (!IsEndAbilityValid(Handle, ActorInfo)) return;
+	
+	if (ensureMsgf(ResetPostureEffect, TEXT("No ResetPosture specified for %s"), *GetNameSafe(this)))
+	{
+		const FGameplayEffectSpecHandle Spec = MakeOutgoingGameplayEffectSpec(ResetPostureEffect);
+		if (Spec.IsValid())
+		{
+			ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, Spec);
+		}
+	}
+	
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}

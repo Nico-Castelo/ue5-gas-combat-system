@@ -181,15 +181,9 @@ void UBladeGameplayAbility_Attack::AdvanceCombo(bool bJumpNow)
 void UBladeGameplayAbility_Attack::TryTriggerPostureBreak(UAbilitySystemComponent* BrokenASC, const AActor* BrokenActor,
 	const AActor* BreakInstigator)
 {
-	if (!BrokenASC || !BrokenActor || !BreakInstigator)
-	{
-		return;
-	}
+	if (!BrokenASC || !BrokenActor || !BreakInstigator) return;
 
-	if (BrokenASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead) || BrokenASC->HasMatchingGameplayTag(BladeGameplayTags::State_PostureBroken))
-	{
-		return;
-	}
+	if (BrokenASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead) || BrokenASC->HasMatchingGameplayTag(BladeGameplayTags::State_PostureBroken)) return;
 
 	const float CurrentPosture = BrokenASC->GetNumericAttribute(UBladeAttributeSet::GetPostureAttribute());
 	const float MaxPosture = BrokenASC->GetNumericAttribute(UBladeAttributeSet::GetMaxPostureAttribute());
