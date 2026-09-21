@@ -26,11 +26,11 @@ The main goal of the project is to build a strong understanding of the Gameplay 
 * Lock-on and directional strafe movement
 * Attack combos
 * Parry / deflect mechanic
+* Posture break
 
 # Planned / WIP
 
 * Thinking to switch animation pack with something that fits better with sekiro combat flow. (9CG - Feels made for hack & slash or fast combat games) Still looking for a pack that fits.
-* Posture break
 * Executions
 * Sounds and VFX with gameplaycues for combat (Don't have this assets yet).
 * Improve overall combat components like hit detections with the trace component & Lock component.
