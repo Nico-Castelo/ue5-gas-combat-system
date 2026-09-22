@@ -13,7 +13,7 @@ namespace BladeGameplayTags
 	
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_Attacking, "State.Attacking", "Entire attack lifecycle");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_Attacking_Committed, "State.Attacking.Committed", "Attack has cannot be cancelled until this tag is over");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_Attacking_Committed, "State.Attacking.Committed", "Attack is committed so it cannot be cancelled until this tag is over");
 	UE_DEFINE_GAMEPLAY_TAG(State_Blocking, "State.Blocking");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_DeflectWindow, "State.DeflectWindow", "A recent block press allows deflection while guarding.");
 	UE_DEFINE_GAMEPLAY_TAG(State_Evading, "State.Evading");
