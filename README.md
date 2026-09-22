@@ -14,26 +14,29 @@ The main goal of the project is to build a strong understanding of the Gameplay 
 * Custom `AnimInstance` implemented in C++ and shared by player and AI
 * WeaponTraceComponent - Actor component to enable traces and send gameplay events
 * **Gameplay Ability System**
-  * AttributeSet (Health, Posture, MoveSpeed)
-  * Light attack — animation notifies open a hit window; socket-based weapon traces apply damage through a Gameplay Effect
-  * Block — blocked hits deal posture damage instead of health. Both Gameplay Effects are always applied; tag requirements decide which one lands (For now)
+  * AttributeSet (Health, MaxHealth, Posture, MaxPosture, MoveSpeed)
+  * Light attack — a three-hit combo montage. Animation notifies open a hit window; socket-based weapon traces resolve the hit
+  * Block — a blocked hit deals posture damage instead of health. The attack ability picks one result: clean, block, or deflect
   * Hit reactions
-  * Evade — dodge montage with root motion
+  * Evade — directional dodge montages with root motion
   * Sprint — held ability that overrides movement speed through a Gameplay Effect
 * C++ & Blueprint integration
 * Sword combat animation set
-* Duel AI using Behavior Trees — the AI uses the same Gameplay Abilities as the player.
+* Duel AI using Behavior Trees — the enemy uses the same attack, block, hit react, death, and posture break. It does not deflect, evade, or sprint
 * Lock-on and directional strafe movement
 * Attack combos
-* Parry / deflect mechanic
-* Posture break
+* Parry / deflect mechanic (player only, for now)
+* Posture break, with posture reset when the reaction ends
+* Posture regen via GAS MMC
 
 # Planned / WIP
 
-* Thinking to switch animation pack with something that fits better with sekiro combat flow. (9CG - Feels made for hack & slash or fast combat games) Still looking for a pack that fits.
-* Executions
-* Sounds and VFX with gameplaycues for combat (Don't have this assets yet).
-* Improve overall combat components like hit detections with the trace component & Lock component.
+* Knockdown and executions after a posture break
+* Posture regeneration tied to health
+* Health and posture UI
+* Combat sounds and VFX through Gameplay Cues. A licensed VFX pack is on disk locally and not wired up; it is not in this repository
+* The current animation pack stays until the combat loop is finished. Switching packs is a later call, not the next step
+* Improve hit detection and the lock-on component
 
 I intentionally want to keep the planned feature list limited until the main gameplay combat loop is finished. I prefer keep polishing core combat loop and then keep adding sekiro-like features.
 
