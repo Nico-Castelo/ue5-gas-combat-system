@@ -18,10 +18,10 @@ UBladeGameplayAbility_HitReact::UBladeGameplayAbility_HitReact()
 	
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Dead);
 	ActivationBlockedTags.AddTag(BladeGameplayTags::State_Blocking);
-	ActivationBlockedTags.AddTag(BladeGameplayTags::State_PostureBroken);
 
 	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Attack);
 	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_Evade);
+	CancelAbilitiesWithTag.AddTag(BladeGameplayTags::Ability_PostureBreak);
 
 	FAbilityTriggerData TriggerData;
 	TriggerData.TriggerTag = BladeGameplayTags::Event_Combat_HitReceived;
