@@ -50,7 +50,7 @@ protected:
 	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Ability System")
-	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
+	TArray<TSubclassOf<UGameplayEffect>> DefaultAttributeEffects;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	TObjectPtr<UStaticMeshComponent> WeaponMesh;
