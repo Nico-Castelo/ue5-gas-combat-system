@@ -42,8 +42,8 @@ The main goal of the project is to build a strong understanding of the Gameplay 
 
 I am currently reviewing the Tom Looman C++ course because I wanted to refresh concepts and things started clicking better since Im having a better understanding of how GAS works (Had some understanding but everything is clicking right now).
 Project will be continued as soon as a I finish the course and I will try to finish the core gameplay, polish the actual code and mechanics implemented so far, extend the AI behavior and maybe some exiciting new gameplay features in case everything goes smooth.
-
-I intentionally want to keep the planned feature list limited until the main gameplay combat loop is finished. I prefer keep polishing core combat loop and then keep adding sekiro-like features.
+Also I know gameplay cues are missing and gameplay doesn't have a good feeling right now. It was not a good take doing a lot of code understanding and implementation without having consistent effects to gameplay, assets were not available, soon I'll add new niagara pack for some sound
+and effects for placeholder or atleast for the first version. I decided to implement effects and sound latter because I still don't have a solid understanding of how gameplay cues work & don't have assigned assets.
 
 # Credits
 
