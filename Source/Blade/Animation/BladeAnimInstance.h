@@ -7,9 +7,7 @@
 class UAbilitySystemComponent;
 class ACharacter;
 class UCharacterMovementComponent;
-/**
- * 
- */
+
 UCLASS()
 class BLADE_API UBladeAnimInstance : public UAnimInstance
 {
@@ -25,25 +23,25 @@ public:
 
 protected:
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Animation")
 	float GroundSpeed = 0.0f;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Animation")
 	bool bIsFalling = false;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Animation")
 	float VerticalVelocity = 0.0f;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Animation")
 	float Direction = 0.0f;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Animation")
 	bool bIsBlocking = false;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Animation")
 	bool bIsLockedOn = false;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Animation")
 	bool bIsSprinting = false;
 	
 	UPROPERTY(Transient)
