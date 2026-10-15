@@ -76,7 +76,7 @@ void UBladeGameplayAbility_Evade::ActivateAbility(const FGameplayAbilitySpecHand
 	WaitRecover->EventReceived.AddDynamic(this, &UBladeGameplayAbility_Evade::OnRecoveryStarted);
 	WaitRecover->ReadyForActivation();
 
-	PlayMontageAndEndOnCompletion(MontageToPlay, Rate, RootMotionScale);
+	PlayMontageAndEndOnCompletion(MontageToPlay);
 
 	UE_LOG(LogGame, Verbose, TEXT("Evade activated on %s"), *GetNameSafe(GetAvatarActorFromActorInfo()));
 }

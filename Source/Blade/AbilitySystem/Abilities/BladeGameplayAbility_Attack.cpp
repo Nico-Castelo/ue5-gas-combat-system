@@ -119,7 +119,7 @@ void UBladeGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHan
 	WeaponHit->ReadyForActivation();
 	
 	const FName StartSection = ComboSections.IsValidIndex(0) ? ComboSections[0] : NAME_None;
-	PlayMontageAndEndOnCompletion(AttackMontage, Rate, RootMotionScale, StartSection);
+	PlayMontageAndEndOnCompletion(AttackMontage, StartSection);
 	
 	UE_LOG(LogGame, Verbose, TEXT("Attack activated on %s"), *GetNameSafe(GetAvatarActorFromActorInfo()));
 }

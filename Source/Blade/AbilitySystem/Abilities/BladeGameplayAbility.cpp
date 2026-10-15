@@ -7,7 +7,7 @@ UBladeGameplayAbility::UBladeGameplayAbility()
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
-void UBladeGameplayAbility::PlayMontageAndEndOnCompletion(UAnimMontage* Montage, float Rate, float RootMotionScale, FName StartSection)
+void UBladeGameplayAbility::PlayMontageAndEndOnCompletion(UAnimMontage* Montage, FName StartSection)
 {
 	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,

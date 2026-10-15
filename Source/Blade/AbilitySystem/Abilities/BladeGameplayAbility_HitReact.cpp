@@ -55,7 +55,7 @@ void UBladeGameplayAbility_HitReact::ActivateAbility(const FGameplayAbilitySpecH
 		return;
 	}
 
-	PlayMontageAndEndOnCompletion(HitReactMontage, Rate, RootMotionScale, Section);
+	PlayMontageAndEndOnCompletion(HitReactMontage, Section);
 
 	UE_LOG(LogGame, Verbose, TEXT("HitReact: %s on %s from %s"),
 		*Section.ToString(), *GetNameSafe(GetAvatarActorFromActorInfo()), *GetNameSafe(TriggerEventData->Instigator));

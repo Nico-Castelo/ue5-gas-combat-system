@@ -30,12 +30,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Evade")
 	TObjectPtr<UAnimMontage> EvadeMontage;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Evade", meta = (ClampMin = "0.0"))
-	float RootMotionScale = 1.25f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Evade", meta = (ClampMin = "0.0"))
-	float Rate = 1.5f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Evade", meta = (ClampMin = "0.0"))
 	float RecoveryCancelBlendOut = 0.1f;

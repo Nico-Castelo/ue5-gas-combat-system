@@ -31,10 +31,4 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	TObjectPtr<UAnimMontage> HitReactMontage;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Animation", meta = (ClampMin = "0.0"))
-	float RootMotionScale = 1.0f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Animation", meta = (ClampMin = "0.0"))
-	float Rate = 1.0f;
 };

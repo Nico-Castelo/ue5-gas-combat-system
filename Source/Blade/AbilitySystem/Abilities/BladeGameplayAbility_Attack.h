@@ -77,11 +77,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	FName WarpTargetName = TEXT("CombatTarget");
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Attack", meta = (ClampMin = "0.0"))
-	float RootMotionScale = 1.0f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Attack", meta = (ClampMin = "0.0"))
-	float Rate = 1.6f;
+private:
 	
 	UBladeWeaponTraceComponent* GetWeaponTraceComponent() const;
 	

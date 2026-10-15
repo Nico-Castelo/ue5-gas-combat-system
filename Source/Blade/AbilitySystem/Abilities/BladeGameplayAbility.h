@@ -17,7 +17,13 @@ public:
 	
 protected:
 	
-	void PlayMontageAndEndOnCompletion(UAnimMontage* Montage, float Rate = 1.0f, float RootMotionScale = 1.0f, FName StartSection = NAME_None);
+	UPROPERTY(EditDefaultsOnly, Category = "Montage", meta = (ClampMin = "0.0"))
+	float RootMotionScale = 1.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Montage", meta = (ClampMin = "0.0"))
+	float Rate = 1.0f;
+	
+	void PlayMontageAndEndOnCompletion(UAnimMontage* Montage, FName StartSection = NAME_None);
 
 	UFUNCTION()
 	virtual void OnMontageCompleted();
