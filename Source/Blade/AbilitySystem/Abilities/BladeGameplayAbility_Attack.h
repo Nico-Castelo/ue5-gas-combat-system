@@ -23,8 +23,6 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 	void AdvanceCombo(bool bJumpNow);
-	
-	void TryTriggerPostureBreak(UAbilitySystemComponent* BrokenASC, const AActor* BrokenActor, const AActor* BreakInstigator);
 
 	UFUNCTION()
 	void OnRecoveryStarted(FGameplayEventData Payload);

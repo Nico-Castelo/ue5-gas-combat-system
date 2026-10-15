@@ -32,5 +32,17 @@ void UBladeAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 	if (Data.EvaluatedData.Attribute == GetPostureAttribute())
 	{
 		SetPosture(FMath::Clamp(GetPosture(), 0.0f, GetMaxPosture()));
+		
+		UAbilitySystemComponent* OwnerASC = GetOwningAbilitySystemComponent();
+		if (!OwnerASC) return;
+		
+		if (FMath::IsNearlyEqual(GetPosture(), GetMaxPosture()) && !OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_PostureBroken) && 
+			!OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead))
+		{
+			FGameplayEventData PostureBreakEventData;
+			PostureBreakEventData.Instigator = Data.EffectSpec.GetContext().GetInstigator();
+			PostureBreakEventData.Target = GetOwningActor();
+			OwnerASC->HandleGameplayEvent(BladeGameplayTags::Event_Combat_PostureBroken, &PostureBreakEventData);
+		}
 	}
 }
