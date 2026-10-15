@@ -34,7 +34,7 @@ void UBladeGameplayAbility::OnMontageCompleted()
 
 void UBladeGameplayAbility::OnMontageBlendOut()
 {
-	
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void UBladeGameplayAbility::OnMontageCancelled()
