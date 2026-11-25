@@ -54,6 +54,17 @@ void ABladeCharacterBase::PossessedBy(AController* NewController)
 	}
 }
 
+void ABladeCharacterBase::StartHitStop(float Duration)
+{
+	CustomTimeDilation = HitStopTimeDilation;
+	GetWorldTimerManager().SetTimer(HitStopTimerHandle, this, &ABladeCharacterBase::EndHitStop, Duration, false);
+}
+
+void ABladeCharacterBase::EndHitStop()
+{
+	CustomTimeDilation = 1.0f;
+}
+
 AActor* ABladeCharacterBase::GetCombatTarget() const
 {
 	return nullptr;

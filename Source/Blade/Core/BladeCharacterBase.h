@@ -27,9 +27,15 @@ public:
 	
 	virtual void PossessedBy(AController* NewController) override;
 	
+	void StartHitStop(float Duration);
+	
 	virtual AActor* GetCombatTarget() const;
 	
 protected:
+	
+	void EndHitStop();
+	
+	FTimerHandle HitStopTimerHandle;
 	
 	void OnMoveSpeedChanged(const FOnAttributeChangeData& Data);
 	
@@ -55,6 +61,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	TObjectPtr<UBladeWeaponTraceComponent> TraceComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat|Hit Stop", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+	float HitStopTimeDilation = 0.05f;
 	
 public:
 	

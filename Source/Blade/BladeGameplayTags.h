@@ -44,4 +44,9 @@ namespace BladeGameplayTags
 	// Input tags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Input_ComboQueued);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Input_BlockPressed);
+	
+	
+	// Cue tags
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Combat_Deflect);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Combat_Hit);
 }

@@ -38,16 +38,22 @@ void UBladeWeaponTraceComponent::TickComponent(float DeltaTime, ELevelTick TickT
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+	// The trace only runs while an attack ability has it on, so the owner must have an ASC
+	UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner());
+	if (!ensure(ASC)) return;
+
 	const FVector Start = WeaponMesh->GetSocketLocation(TraceStartSocketName);
 	const FVector End = WeaponMesh->GetSocketLocation(TraceEndSocketName);
-
-	TArray<FHitResult> Hits;
+	
 	const bool bDebugDraw = CVarWeaponTraceDebugDraw.GetValueOnGameThread();
 	const EDrawDebugTrace::Type DebugDrawType = bDebugDraw ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
+	
+	TArray<FHitResult> Hits;
+	
 	UKismetSystemLibrary::SphereTraceMulti(this, Start, End, TraceRadius,
 		UEngineTypes::ConvertToTraceType(ECC_Weapon), false, { GetOwner() },
 		DebugDrawType, Hits, true, FLinearColor::Red, FLinearColor::Green, 2.0f);
-	
+
 	for (const FHitResult& Hit: Hits)
 	{
 		AActor* HitActor = Hit.GetActor();
@@ -55,15 +61,14 @@ void UBladeWeaponTraceComponent::TickComponent(float DeltaTime, ELevelTick TickT
 		if (!HitActor || HitActors.Contains(HitActor)) continue;
 		
 		HitActors.Add(HitActor);
-		
-		FGameplayEventData Payload;	
+
+		FGameplayEventData Payload;
 		Payload.Instigator = GetOwner();
 		Payload.Target = HitActor;
+		Payload.ContextHandle = ASC->MakeEffectContext();
+		Payload.ContextHandle.AddHitResult(Hit);
 		
-		if (UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner()))
-		{
-			ASC->HandleGameplayEvent(BladeGameplayTags::Event_Combat_HitDealt, &Payload);
-		}
+		ASC->HandleGameplayEvent(BladeGameplayTags::Event_Combat_HitDealt, &Payload);
 	}
 }
 

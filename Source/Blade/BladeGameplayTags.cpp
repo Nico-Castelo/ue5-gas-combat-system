@@ -39,4 +39,7 @@ namespace BladeGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Input_ComboQueued, "Event.Input.ComboQueued", "Sent when a combo input is queued.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Input_BlockPressed, "Event.Input.BlockPressed", "Sent when block is pressed but not hold");
+	
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Combat_Deflect, "GameplayCue.Combat.Deflect");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Combat_Hit, "GameplayCue.Combat.Hit");
 }

@@ -52,6 +52,12 @@ protected:
 	void OnBlockCancelWindowEnd(FGameplayEventData Payload);
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	float DeflectHitStopDuration = 0.1f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	float CleanHitStopDuration = 0.06f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TArray<FName> ComboSections;
 	
 	int32 ComboIndex = 0;
