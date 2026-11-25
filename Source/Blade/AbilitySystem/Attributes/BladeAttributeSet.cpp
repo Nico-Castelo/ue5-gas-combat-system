@@ -18,7 +18,7 @@ void UBladeAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 		
 		UAbilitySystemComponent* OwnerASC = GetOwningAbilitySystemComponent();
-		if (!OwnerASC) return;
+		if (!ensure(OwnerASC)) return;
 		
 		if (GetHealth() <= 0.0f && !OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead))
 		{
@@ -34,7 +34,7 @@ void UBladeAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 		SetPosture(FMath::Clamp(GetPosture(), 0.0f, GetMaxPosture()));
 		
 		UAbilitySystemComponent* OwnerASC = GetOwningAbilitySystemComponent();
-		if (!OwnerASC) return;
+		if (!ensure(OwnerASC)) return;
 		
 		if (FMath::IsNearlyEqual(GetPosture(), GetMaxPosture()) && !OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_PostureBroken) && 
 			!OwnerASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead))

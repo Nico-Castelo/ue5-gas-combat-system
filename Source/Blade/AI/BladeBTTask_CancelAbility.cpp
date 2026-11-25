@@ -18,7 +18,7 @@ EBTNodeResult::Type UBladeBTTask_CancelAbility::ExecuteTask(UBehaviorTreeCompone
 	if (!AIPawn) return EBTNodeResult::Failed;
 	
 	UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(AIPawn);
-	if (!ASC) return EBTNodeResult::Failed;
+	if (!ensure(ASC)) return EBTNodeResult::Failed;
 	
 	FGameplayTagContainer CancelTags(AbilityTag);
 	ASC->CancelAbilities(&CancelTags);

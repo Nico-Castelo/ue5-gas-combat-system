@@ -18,7 +18,7 @@ EBTNodeResult::Type UBladeBTTask_ActivateAbility::ExecuteTask(UBehaviorTreeCompo
 	if (!AIPawn) return EBTNodeResult::Failed;
 	
 	UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(AIPawn);
-	if (!ASC) return EBTNodeResult::Failed;
+	if (!ensure(ASC)) return EBTNodeResult::Failed;
 	
 	return ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(AbilityTag)) ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 }
