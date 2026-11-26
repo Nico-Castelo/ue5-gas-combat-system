@@ -244,11 +244,16 @@ void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UA
 	float HitStopDuration = 0.0f;
 	FGameplayCueParameters CueParameters(Context);
 
+	// Blocks and deflects are blade against blade: their spark goes on the defender's sword, not on the body
+	const AActor* DefenderActor = TargetASC.GetAvatarActor();
+	const UBladeWeaponTraceComponent* DefenderWeapon = DefenderActor ? DefenderActor->FindComponentByClass<UBladeWeaponTraceComponent>() : nullptr;
+
 	switch (HitResult)
 	{
 	case EBladeHitResult::Deflected:
 		CueTag = BladeGameplayTags::GameplayCue_Combat_Deflect;
 		HitStopDuration = DeflectHitStopDuration;
+		if (DefenderWeapon) CueParameters.Location = DefenderWeapon->GetBladeCenter();
 		break;
 		
 	case EBladeHitResult::Clean:
@@ -267,6 +272,7 @@ void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UA
 	case EBladeHitResult::Blocked:
 		CueTag = BladeGameplayTags::GameplayCue_Combat_Block;
 		HitStopDuration = BlockedHitStopDuration;
+		if (DefenderWeapon) CueParameters.Location = DefenderWeapon->GetBladeCenter();
 		break;
 	}
 

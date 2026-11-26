@@ -85,3 +85,13 @@ void UBladeWeaponTraceComponent::StopTrace()
 	SetComponentTickEnabled(false);
 }
 
+FVector UBladeWeaponTraceComponent::GetBladeCenter() const
+{
+	if (!ensure(WeaponMesh)) return GetOwner()->GetActorLocation();
+
+	const FVector Start = WeaponMesh->GetSocketLocation(TraceStartSocketName);
+	const FVector End = WeaponMesh->GetSocketLocation(TraceEndSocketName);
+	
+	return FMath::Lerp(Start, End, 0.5f);
+}
+

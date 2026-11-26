@@ -22,6 +22,8 @@ public:
 	
 	void StopTrace();
 	
+	FVector GetBladeCenter() const;
+	
 protected:
 	
 	UPROPERTY()
