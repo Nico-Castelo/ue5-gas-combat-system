@@ -10,6 +10,20 @@
 #include "Core/BladeCharacterBase.h"
 #include "Core/BladeWeaponTraceComponent.h"
 
+namespace
+{
+	const TCHAR* HitResultToString(EBladeHitResult HitResult)
+	{
+		switch (HitResult)
+		{
+		case EBladeHitResult::Clean:		return TEXT("Clean");
+		case EBladeHitResult::Blocked:		return TEXT("Block");
+		case EBladeHitResult::Deflected:	return TEXT("Deflect");
+		}
+		return TEXT("Unknown");
+	}
+}
+
 UBladeGameplayAbility_Attack::UBladeGameplayAbility_Attack()
 {
 	FGameplayTagContainer Tags;
@@ -325,14 +339,10 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	const EBladeHitResult HitResult = DetermineHitResult(*TargetASC);
 	ApplyHitEffects(HitResult, *SourceASC, *TargetASC);
 	PlayHitFeedback(HitResult, *TargetASC, Payload.ContextHandle);
-
 	NotifyHitReceived(*TargetASC, Payload.Target);
 
-	const TCHAR* HitResultText = HitResult == EBladeHitResult::Deflected ? TEXT("Deflect")
-		: HitResult == EBladeHitResult::Blocked ? TEXT("Block")
-		: TEXT("Clean");
 	UE_LOG(LogGame, Log, TEXT("Hit resolved [%s]: %s -> %s | Attacker Posture %.0f | Defender Health %.0f, Posture %.0f"),
-		HitResultText,
+		HitResultToString(HitResult),
 		*GetNameSafe(GetAvatarActorFromActorInfo()), *GetNameSafe(Payload.Target),
 		SourceASC->GetNumericAttribute(UBladeAttributeSet::GetPostureAttribute()),
 		TargetASC->GetNumericAttribute(UBladeAttributeSet::GetHealthAttribute()),
