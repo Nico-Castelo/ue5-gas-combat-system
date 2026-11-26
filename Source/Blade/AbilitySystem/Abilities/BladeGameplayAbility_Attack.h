@@ -33,6 +33,8 @@ protected:
 	
 	EBladeHitResult DetermineHitResult(const UAbilitySystemComponent& TargetASC) const;
 	
+	void ApplyHitEffects(EBladeHitResult HitResult, UAbilitySystemComponent& SourceASC, UAbilitySystemComponent& TargetASC) const;
+
 	void PlayHitFeedback(EBladeHitResult HitResult, UAbilitySystemComponent& TargetASC, const FGameplayEffectContextHandle& Context) const;
 
 	UFUNCTION()

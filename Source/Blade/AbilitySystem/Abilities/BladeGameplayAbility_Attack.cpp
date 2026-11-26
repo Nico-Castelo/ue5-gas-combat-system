@@ -187,6 +187,42 @@ EBladeHitResult UBladeGameplayAbility_Attack::DetermineHitResult(const UAbilityS
 	return EBladeHitResult::Blocked;
 }
 
+void UBladeGameplayAbility_Attack::ApplyHitEffects(EBladeHitResult HitResult, UAbilitySystemComponent& SourceASC,
+	UAbilitySystemComponent& TargetASC) const
+{
+	switch (HitResult)
+	{
+	case EBladeHitResult::Deflected:
+	{
+		// The defender's deflect pushes posture damage back onto the attacker
+		const FGameplayEffectSpecHandle DeflectPostureSpecHandle = TargetASC.MakeOutgoingSpec(DeflectPostureDamageEffect, GetAbilityLevel(), TargetASC.MakeEffectContext());
+		if (DeflectPostureSpecHandle.IsValid())
+		{
+			TargetASC.ApplyGameplayEffectSpecToTarget(*DeflectPostureSpecHandle.Data.Get(), &SourceASC);
+		}
+		break;
+	}
+	case EBladeHitResult::Clean:
+	{
+		const FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
+		if (DamageSpecHandle.IsValid())
+		{
+			SourceASC.ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), &TargetASC);
+		}
+		break;
+	}
+	case EBladeHitResult::Blocked:
+		break;
+	}
+
+	// Every hit wears down the defender's posture, even a deflect
+	const FGameplayEffectSpecHandle PostureSpecHandle = MakeOutgoingGameplayEffectSpec(PostureDamageEffect);
+	if (PostureSpecHandle.IsValid())
+	{
+		SourceASC.ApplyGameplayEffectSpecToTarget(*PostureSpecHandle.Data.Get(), &TargetASC);
+	}
+}
+
 void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UAbilitySystemComponent& TargetASC,
 	const FGameplayEffectContextHandle& Context) const
 {
@@ -279,29 +315,8 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	// @todo: Pending refactor for core gameplay and deflect window
 
 	const EBladeHitResult HitResult = DetermineHitResult(*TargetASC);
-
-	if (HitResult == EBladeHitResult::Deflected)
-	{
-		FGameplayEffectSpecHandle DeflectPostureSpecHandle = TargetASC->MakeOutgoingSpec(DeflectPostureDamageEffect, GetAbilityLevel(), TargetASC->MakeEffectContext());
-		if (!DeflectPostureSpecHandle.IsValid()) return;
-
-		TargetASC->ApplyGameplayEffectSpecToTarget(*DeflectPostureSpecHandle.Data.Get(), SourceASC);
-	}
-	else if (HitResult == EBladeHitResult::Clean)
-	{
-		FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
-
-		if (!DamageSpecHandle.IsValid()) return;
-
-		SourceASC->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
-	}
-
+	ApplyHitEffects(HitResult, *SourceASC, *TargetASC);
 	PlayHitFeedback(HitResult, *TargetASC, Payload.ContextHandle);
-
-	FGameplayEffectSpecHandle PostureSpecHandle = MakeOutgoingGameplayEffectSpec(PostureDamageEffect);
-	if (!PostureSpecHandle.IsValid()) return;
-
-	SourceASC->ApplyGameplayEffectSpecToTarget(*PostureSpecHandle.Data.Get(), TargetASC);
 
 	FGameplayEventData HitReceivedPayload;
 	HitReceivedPayload.Instigator = GetAvatarActorFromActorInfo();
