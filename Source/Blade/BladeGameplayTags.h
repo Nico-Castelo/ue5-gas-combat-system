@@ -48,5 +48,6 @@ namespace BladeGameplayTags
 	
 	// Cue tags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Combat_Deflect);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Combat_Block);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Combat_Hit);
 }

@@ -256,7 +256,9 @@ void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UA
 		break;
 		
 	case EBladeHitResult::Blocked:
-		return;
+		CueTag = BladeGameplayTags::GameplayCue_Combat_Block;
+		HitStopDuration = BlockedHitStopDuration;
+		break;
 	}
 	
 	TargetASC.ExecuteGameplayCue(CueTag, Context);

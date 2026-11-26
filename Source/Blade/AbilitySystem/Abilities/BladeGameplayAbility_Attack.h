@@ -73,6 +73,9 @@ protected:
 	float CleanHitStopDuration = 0.06f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	float BlockedHitStopDuration  = 0.06f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	TArray<FName> ComboSections;
 	
 	int32 ComboIndex = 0;
