@@ -229,7 +229,7 @@ void UBladeGameplayAbility_Attack::ApplyHitEffects(EBladeHitResult HitResult, UA
 		break;
 	}
 
-	// Every hit wears down the defender's posture, even a deflect
+	// Every hit wears down the defender's posture, even deflect
 	const FGameplayEffectSpecHandle PostureSpecHandle = MakeOutgoingGameplayEffectSpec(PostureDamageEffect);
 	if (PostureSpecHandle.IsValid())
 	{
@@ -242,6 +242,7 @@ void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UA
 {
 	FGameplayTag CueTag;
 	float HitStopDuration = 0.0f;
+	FGameplayCueParameters CueParameters(Context);
 
 	switch (HitResult)
 	{
@@ -253,15 +254,23 @@ void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UA
 	case EBladeHitResult::Clean:
 		CueTag = BladeGameplayTags::GameplayCue_Combat_Hit;
 		HitStopDuration = CleanHitStopDuration;
+
+		// The weapon trace overlaps instead of blocking, so the cue ignores the hit result on its own:
+		// pass the impact point explicitly
+		if (const FHitResult* Hit = Context.GetHitResult())
+		{
+			CueParameters.Location = Hit->ImpactPoint;
+			CueParameters.Normal = Hit->ImpactNormal;
+		}
 		break;
-		
+
 	case EBladeHitResult::Blocked:
 		CueTag = BladeGameplayTags::GameplayCue_Combat_Block;
 		HitStopDuration = BlockedHitStopDuration;
 		break;
 	}
-	
-	TargetASC.ExecuteGameplayCue(CueTag, Context);
+
+	TargetASC.ExecuteGameplayCue(CueTag, CueParameters);
 	
 	if (ABladeCharacterBase* Attacker = Cast<ABladeCharacterBase>(GetAvatarActorFromActorInfo()))
 	{
