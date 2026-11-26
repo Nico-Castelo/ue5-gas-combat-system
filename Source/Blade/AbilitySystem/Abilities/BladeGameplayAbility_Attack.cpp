@@ -334,6 +334,8 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Payload.Target);
 	if (!TargetASC) return;
 	
+	if (TargetASC->HasMatchingGameplayTag(BladeGameplayTags::State_Dead)) return;
+	
 	// @todo: Pending refactor for core gameplay and deflect window
 
 	const EBladeHitResult HitResult = DetermineHitResult(*TargetASC);
