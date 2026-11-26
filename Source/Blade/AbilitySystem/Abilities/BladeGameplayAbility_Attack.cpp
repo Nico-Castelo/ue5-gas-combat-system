@@ -258,6 +258,14 @@ void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UA
 	}
 }
 
+void UBladeGameplayAbility_Attack::NotifyHitReceived(UAbilitySystemComponent& TargetASC, const AActor* Target) const
+{
+	FGameplayEventData HitReceivedPayload;
+	HitReceivedPayload.Instigator = GetAvatarActorFromActorInfo();
+	HitReceivedPayload.Target = Target;
+	TargetASC.HandleGameplayEvent(BladeGameplayTags::Event_Combat_HitReceived, &HitReceivedPayload);
+}
+
 void UBladeGameplayAbility_Attack::OnRecoveryStarted(FGameplayEventData Payload)
 {
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
@@ -318,10 +326,7 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	ApplyHitEffects(HitResult, *SourceASC, *TargetASC);
 	PlayHitFeedback(HitResult, *TargetASC, Payload.ContextHandle);
 
-	FGameplayEventData HitReceivedPayload;
-	HitReceivedPayload.Instigator = GetAvatarActorFromActorInfo();
-	HitReceivedPayload.Target = Payload.Target;
-	TargetASC->HandleGameplayEvent(BladeGameplayTags::Event_Combat_HitReceived, &HitReceivedPayload);
+	NotifyHitReceived(*TargetASC, Payload.Target);
 
 	const TCHAR* HitResultText = HitResult == EBladeHitResult::Deflected ? TEXT("Deflect")
 		: HitResult == EBladeHitResult::Blocked ? TEXT("Block")

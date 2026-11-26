@@ -37,6 +37,8 @@ protected:
 
 	void PlayHitFeedback(EBladeHitResult HitResult, UAbilitySystemComponent& TargetASC, const FGameplayEffectContextHandle& Context) const;
 
+	void NotifyHitReceived(UAbilitySystemComponent& TargetASC, const AActor* Target) const;
+
 	UFUNCTION()
 	void OnRecoveryStarted(FGameplayEventData Payload);
 	
@@ -51,7 +53,7 @@ protected:
 	
 	UFUNCTION()
 	void OnHitWindowEnd(FGameplayEventData Payload);
-	
+
 	UFUNCTION()
 	void OnWeaponHit(FGameplayEventData Payload);
 	
