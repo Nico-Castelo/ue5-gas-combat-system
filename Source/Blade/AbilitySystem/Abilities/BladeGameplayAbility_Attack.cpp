@@ -187,6 +187,41 @@ EBladeHitResult UBladeGameplayAbility_Attack::DetermineHitResult(const UAbilityS
 	return EBladeHitResult::Blocked;
 }
 
+void UBladeGameplayAbility_Attack::PlayHitFeedback(EBladeHitResult HitResult, UAbilitySystemComponent& TargetASC,
+	const FGameplayEffectContextHandle& Context) const
+{
+	FGameplayTag CueTag;
+	float HitStopDuration = 0.0f;
+
+	switch (HitResult)
+	{
+	case EBladeHitResult::Deflected:
+		CueTag = BladeGameplayTags::GameplayCue_Combat_Deflect;
+		HitStopDuration = DeflectHitStopDuration;
+		break;
+		
+	case EBladeHitResult::Clean:
+		CueTag = BladeGameplayTags::GameplayCue_Combat_Hit;
+		HitStopDuration = CleanHitStopDuration;
+		break;
+		
+	case EBladeHitResult::Blocked:
+		return;
+	}
+	
+	TargetASC.ExecuteGameplayCue(CueTag, Context);
+	
+	if (ABladeCharacterBase* Attacker = Cast<ABladeCharacterBase>(GetAvatarActorFromActorInfo()))
+	{
+		Attacker->StartHitStop(HitStopDuration);
+	}
+
+	if (ABladeCharacterBase* Defender = Cast<ABladeCharacterBase>(TargetASC.GetAvatarActor()))
+	{
+		Defender->StartHitStop(HitStopDuration);
+	}
+}
+
 void UBladeGameplayAbility_Attack::OnRecoveryStarted(FGameplayEventData Payload)
 {
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
@@ -242,9 +277,7 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	if (!TargetASC) return;
 	
 	// @todo: Pending refactor for core gameplay and deflect window
-	
-	float HitStopDuration = 0.0f;
-	
+
 	const EBladeHitResult HitResult = DetermineHitResult(*TargetASC);
 
 	if (HitResult == EBladeHitResult::Deflected)
@@ -253,9 +286,6 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 		if (!DeflectPostureSpecHandle.IsValid()) return;
 
 		TargetASC->ApplyGameplayEffectSpecToTarget(*DeflectPostureSpecHandle.Data.Get(), SourceASC);
-		
-		TargetASC->ExecuteGameplayCue(BladeGameplayTags::GameplayCue_Combat_Deflect, Payload.ContextHandle);
-		HitStopDuration = DeflectHitStopDuration;
 	}
 	else if (HitResult == EBladeHitResult::Clean)
 	{
@@ -264,23 +294,9 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 		if (!DamageSpecHandle.IsValid()) return;
 
 		SourceASC->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
-		
-		TargetASC->ExecuteGameplayCue(BladeGameplayTags::GameplayCue_Combat_Hit, Payload.ContextHandle);
-		HitStopDuration = CleanHitStopDuration;
 	}
-	
-	if (HitStopDuration > 0.0f)
-	{
-		if (ABladeCharacterBase* Attacker = Cast<ABladeCharacterBase>(GetAvatarActorFromActorInfo()))
-		{
-			Attacker->StartHitStop(HitStopDuration);
-		}
 
-		if (ABladeCharacterBase* Defender = Cast<ABladeCharacterBase>(TargetASC->GetAvatarActor()))
-		{
-			Defender->StartHitStop(HitStopDuration);
-		}
-	}
+	PlayHitFeedback(HitResult, *TargetASC, Payload.ContextHandle);
 
 	FGameplayEffectSpecHandle PostureSpecHandle = MakeOutgoingGameplayEffectSpec(PostureDamageEffect);
 	if (!PostureSpecHandle.IsValid()) return;

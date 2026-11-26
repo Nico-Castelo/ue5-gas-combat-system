@@ -32,6 +32,8 @@ protected:
 	void AdvanceCombo(bool bJumpNow);
 	
 	EBladeHitResult DetermineHitResult(const UAbilitySystemComponent& TargetASC) const;
+	
+	void PlayHitFeedback(EBladeHitResult HitResult, UAbilitySystemComponent& TargetASC, const FGameplayEffectContextHandle& Context) const;
 
 	UFUNCTION()
 	void OnRecoveryStarted(FGameplayEventData Payload);
