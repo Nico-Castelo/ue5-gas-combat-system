@@ -178,6 +178,15 @@ void UBladeGameplayAbility_Attack::AdvanceCombo(bool bJumpNow)
 	ASC->AddLooseGameplayTag(BladeGameplayTags::State_Attacking_Committed);
 }
 
+EBladeHitResult UBladeGameplayAbility_Attack::DetermineHitResult(const UAbilitySystemComponent& TargetASC) const
+{
+	if (!TargetASC.HasMatchingGameplayTag(BladeGameplayTags::State_Blocking)) return EBladeHitResult::Clean;
+	
+	if (TargetASC.HasMatchingGameplayTag(BladeGameplayTags::State_DeflectWindow)) return EBladeHitResult::Deflected;
+	
+	return EBladeHitResult::Blocked;
+}
+
 void UBladeGameplayAbility_Attack::OnRecoveryStarted(FGameplayEventData Payload)
 {
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
@@ -233,13 +242,12 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	if (!TargetASC) return;
 	
 	// @todo: Pending refactor for core gameplay and deflect window
-
-	const bool bIsBlocking = TargetASC->HasMatchingGameplayTag(BladeGameplayTags::State_Blocking);
-	const bool bWasDeflected = bIsBlocking && TargetASC->HasMatchingGameplayTag(BladeGameplayTags::State_DeflectWindow);
 	
 	float HitStopDuration = 0.0f;
+	
+	const EBladeHitResult HitResult = DetermineHitResult(*TargetASC);
 
-	if (bWasDeflected)
+	if (HitResult == EBladeHitResult::Deflected)
 	{
 		FGameplayEffectSpecHandle DeflectPostureSpecHandle = TargetASC->MakeOutgoingSpec(DeflectPostureDamageEffect, GetAbilityLevel(), TargetASC->MakeEffectContext());
 		if (!DeflectPostureSpecHandle.IsValid()) return;
@@ -249,7 +257,7 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 		TargetASC->ExecuteGameplayCue(BladeGameplayTags::GameplayCue_Combat_Deflect, Payload.ContextHandle);
 		HitStopDuration = DeflectHitStopDuration;
 	}
-	else if (!bIsBlocking)
+	else if (HitResult == EBladeHitResult::Clean)
 	{
 		FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect);
 
@@ -284,9 +292,11 @@ void UBladeGameplayAbility_Attack::OnWeaponHit(FGameplayEventData Payload)
 	HitReceivedPayload.Target = Payload.Target;
 	TargetASC->HandleGameplayEvent(BladeGameplayTags::Event_Combat_HitReceived, &HitReceivedPayload);
 
-	const TCHAR* HitResult = bWasDeflected ? TEXT("Deflect") : bIsBlocking ? TEXT("Block") : TEXT("Clean");
+	const TCHAR* HitResultText = HitResult == EBladeHitResult::Deflected ? TEXT("Deflect")
+		: HitResult == EBladeHitResult::Blocked ? TEXT("Block")
+		: TEXT("Clean");
 	UE_LOG(LogGame, Log, TEXT("Hit resolved [%s]: %s -> %s | Attacker Posture %.0f | Defender Health %.0f, Posture %.0f"),
-		HitResult,
+		HitResultText,
 		*GetNameSafe(GetAvatarActorFromActorInfo()), *GetNameSafe(Payload.Target),
 		SourceASC->GetNumericAttribute(UBladeAttributeSet::GetPostureAttribute()),
 		TargetASC->GetNumericAttribute(UBladeAttributeSet::GetHealthAttribute()),

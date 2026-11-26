@@ -7,6 +7,13 @@
 class UMotionWarpingComponent;
 class UBladeWeaponTraceComponent;
 
+enum class EBladeHitResult : uint8
+{
+	Clean,
+	Blocked,
+	Deflected
+};
+
 UCLASS()
 class BLADE_API UBladeGameplayAbility_Attack : public UBladeGameplayAbility
 {
@@ -23,6 +30,8 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 	void AdvanceCombo(bool bJumpNow);
+	
+	EBladeHitResult DetermineHitResult(const UAbilitySystemComponent& TargetASC) const;
 
 	UFUNCTION()
 	void OnRecoveryStarted(FGameplayEventData Payload);
